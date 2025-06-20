@@ -7,6 +7,7 @@ import (
 	"io"
 	"log/slog"
 	"net/http"
+	"strconv"
 
 	"github.com/Amar2502/go-todo-app/internal/storage"
 	"github.com/Amar2502/go-todo-app/internal/types"
@@ -64,6 +65,28 @@ func ReadTodo(storage storage.Storage) http.HandlerFunc {
 		}
 
 		response.WriteJson(w, http.StatusOK, todos)
+
+	}
+}
+
+func DeleteTodo(storage storage.Storage) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		id := r.PathValue("id")
+		slog.Info("getting student by id", slog.String("id", id))
+
+		intId, err := 	strconv.ParseInt(id, 10, 64)
+		if err != nil {
+			response.WriteJson(w, http.StatusBadRequest, response.GeneralError(err))
+			return
+		}
+
+		msg, err := storage.DeleteTodo(intId)
+		if err != nil {
+			response.WriteJson(w, http.StatusBadRequest, response.GeneralError(err))
+			return
+		}
+
+		response.WriteJson(w, http.StatusOK, map[string]string{"message": msg})
 
 	}
 }

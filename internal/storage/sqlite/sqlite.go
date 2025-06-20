@@ -86,3 +86,30 @@ func (s *Sqlite) ReadTodo() ([]types.Todo, error) {
 
 	return todos, nil
 }
+
+
+func (s *Sqlite) DeleteTodo(id int64) (msg string, err error) {
+
+	stmt, err := s.Db.Prepare(`DELETE FROM todos WHERE id = ?`)
+
+	if err != nil {
+		return "", err
+	}
+	defer stmt.Close()
+
+	res, err := stmt.Exec(id)
+	if err != nil {
+		return "", err
+	}
+
+	rows, err := res.RowsAffected()
+	if err != nil {
+		return "", err
+	}
+
+	if rows == 0 {
+		return "no todo found", nil
+	}
+
+	return "todo deleted successfully", nil
+}
