@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/Amar2502/go-todo-app/internal/config"
+	"github.com/Amar2502/go-todo-app/internal/handlers/todo"
 	"github.com/Amar2502/go-todo-app/internal/storage/sqlite"
 )
 
@@ -22,7 +23,7 @@ func main() {
 
 
 	//database setup
-	_, er := sqlite.New(cfg)
+	storage , er := sqlite.New(cfg)
 	if er != nil {
 		log.Fatal("cannot connect to database: ", er.Error())
 	}
@@ -36,6 +37,8 @@ func main() {
 	router.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintln(w, "Server has started")
 	})
+
+	router.HandleFunc("POST /todos/insert", todo.AddTodo(storage))
 	
 
 	//server setup

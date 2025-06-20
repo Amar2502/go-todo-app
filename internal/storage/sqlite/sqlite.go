@@ -29,3 +29,27 @@ func New(cfg *config.Config) (*Sqlite, error) {
 
 	return &Sqlite{Db: db}, nil
 } 
+
+
+func (s *Sqlite) InsertTodo(task string, start_time string) (int64, error) {
+	
+	stmt, err := s.Db.Prepare(`INSERT INTO todos(task, start_time) VALUES (?, ?)`)
+
+	if err!=nil {
+		return 0, err
+	}
+	defer stmt.Close()
+
+	res,err := stmt.Exec(task, start_time)
+	if err!=nil {
+		return 0, err
+	}
+
+	lastId, err := res.LastInsertId()
+	if err!=nil {
+		return 0, err
+	}
+
+	return lastId, nil
+
+}
