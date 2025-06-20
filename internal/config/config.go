@@ -13,8 +13,8 @@ type HttpServer struct {
 }
 
 type Config struct {
-	env          string     `yaml:"env" env:"env" env-required:"true"`
-	storage_path string     `yaml:"storage_path" env:"storage_path" env-required:"true"`
+	Env          string     `yaml:"env" env:"env" env-required:"true"`
+	Storage_path string     `yaml:"storage_path" env:"storage_path" env-required:"true"`
 	HttpServer   HttpServer `yaml:"http_server"`
 }
 

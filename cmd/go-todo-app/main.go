@@ -12,6 +12,7 @@ import (
 	"time"
 
 	"github.com/Amar2502/go-todo-app/internal/config"
+	"github.com/Amar2502/go-todo-app/internal/storage/sqlite"
 )
 
 func main() {
@@ -21,6 +22,12 @@ func main() {
 
 
 	//database setup
+	_, er := sqlite.New(cfg)
+	if er != nil {
+		log.Fatal("cannot connect to database: ", er.Error())
+	}
+
+	slog.Info("storage initialized", slog.String("env", cfg.Env))
 
 
 	//router setup
