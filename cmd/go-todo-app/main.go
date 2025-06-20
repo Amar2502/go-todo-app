@@ -39,7 +39,7 @@ func main() {
 	})
 
 	router.HandleFunc("POST /todos/insert", todo.AddTodo(storage))
-	
+	router.HandleFunc("GET /todos/read", todo.ReadTodo(storage))
 
 	//server setup
 	server := http.Server {

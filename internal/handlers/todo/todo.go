@@ -48,3 +48,22 @@ func AddTodo(storage storage.Storage) http.HandlerFunc {
 
 	}
 }
+
+func ReadTodo(storage storage.Storage) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		
+		todos, err := storage.ReadTodo()
+		if err != nil {
+			response.WriteJson(w, http.StatusBadRequest, response.GeneralError(err))
+			return
+		}
+
+		if todos == nil {
+			response.WriteJson(w, http.StatusNotFound, response.GeneralError(errors.New("no todos found")))
+			return
+		}
+
+		response.WriteJson(w, http.StatusOK, todos)
+
+	}
+}
