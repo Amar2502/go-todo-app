@@ -41,6 +41,7 @@ func main() {
 	router.HandleFunc("POST /todos/insert", todo.AddTodo(storage))
 	router.HandleFunc("GET /todos/read", todo.ReadTodo(storage))
 	router.HandleFunc("DELETE /todos/delete/{id}", todo.DeleteTodo(storage))
+	router.HandleFunc("PUT /todos/update/{id}", todo.UpdateTodo(storage))
 
 	//server setup
 	server := http.Server {

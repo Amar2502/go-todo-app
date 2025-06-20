@@ -90,3 +90,34 @@ func DeleteTodo(storage storage.Storage) http.HandlerFunc {
 
 	}
 }
+
+func UpdateTodo(storage storage.Storage) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		var todo types.Todo
+		err := json.NewDecoder(r.Body).Decode(&todo)
+		if err != nil {
+			response.WriteJson(w, http.StatusBadRequest, response.GeneralError(err))
+			return
+		}
+
+		id := r.PathValue("id")
+		slog.Info("getting todo by id", slog.String("id", id))
+
+		intId, er := strconv.ParseInt(id, 10, 64)
+		if er != nil {
+			response.WriteJson(w, http.StatusBadRequest, response.GeneralError(err))
+			return
+		}
+
+		Newtodo, err := storage.UpdateTodo(intId, todo.Task, todo.StartTime)
+		if err != nil {
+			response.WriteJson(w, http.StatusBadRequest, response.GeneralError(err))
+			return
+		}
+
+		response.WriteJson(w, http.StatusOK, Newtodo)	
+
+
+	}
+}

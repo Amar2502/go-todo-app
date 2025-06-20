@@ -2,7 +2,8 @@ package sqlite
 
 import (
 	"database/sql"
-
+	"errors"
+	
 	"github.com/Amar2502/go-todo-app/internal/config"
 	"github.com/Amar2502/go-todo-app/internal/types"
 	_ "github.com/mattn/go-sqlite3"
@@ -112,4 +113,33 @@ func (s *Sqlite) DeleteTodo(id int64) (msg string, err error) {
 	}
 
 	return "todo deleted successfully", nil
+}
+
+func (s *Sqlite) UpdateTodo(id int64, task string, start_time string) (todo types.Todo, err error) {
+
+	stmt, err := s.Db.Prepare(`UPDATE todos SET task = ?, start_time = ? WHERE id = ?`)
+
+	if err != nil {
+		return types.Todo{}, err
+	}
+	defer stmt.Close()
+
+	res, err := stmt.Exec(task, start_time, id)
+	if err != nil {
+		return types.Todo{}, err
+	}
+
+	rows, err := res.RowsAffected()
+	if err != nil {
+		return types.Todo{}, err
+	}
+
+	if rows == 0 {
+		return types.Todo{}, errors.New("no todo found")
+	}
+
+	Intid := int(id)
+
+	return types.Todo{ID: Intid, Task: task, StartTime: start_time}, nil
+
 }

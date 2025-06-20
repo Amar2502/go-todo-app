@@ -6,4 +6,5 @@ type Storage interface {
 	InsertTodo(task string, start_time string) (lastId int64, err error)
 	ReadTodo() ([]types.Todo, error)
 	DeleteTodo(id int64) (msg string, err error)
+	UpdateTodo(id int64, task string, start_time string) (todo types.Todo, err error)
 }
